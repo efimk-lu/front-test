@@ -1,4 +1,4 @@
 # Running
 
 * `npm i`
-* npm run nodemon
+* `npm run nodemon`
