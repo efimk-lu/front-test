@@ -101,6 +101,13 @@ class Rooms {
 const users = new Users();
 const rooms = new Rooms(users);
 
+
+// Add a single user
+const roomId = rooms.add("Chillin around")
+const userId = users.add("Lumigo")
+rooms.addUser(roomId, userId)
+rooms.addText(roomId, userId, "whasup!!")
+
 app.post("/users", (req, res, next) => {
 	console.info(`User joined ${inspect(req.body)}`);
 	const userId = users.add(req.body.name);
@@ -146,13 +153,8 @@ app.get("/rooms/:roomId/users", (req, res, next) => {
 		return;
 	}
 
-	if (!req.query.from || !req.query.to) {
-		res.status(400).send("Missing query params of 'from' and 'to'");
-		return;
-	}
-
 	res.json({
-		users: room.users.slice(req.query.from, req.query.to)
+		users: room.users
 	});
 });
 
@@ -178,12 +180,8 @@ app.delete("/rooms/:roomId/users/:userId", (req, res, next) => {
 
 app.get("/rooms/:roomId/text", (req, res, next) => {
 	const room = rooms.getRoom(req.params.roomId, res);
-	if (!req.query.from || !req.query.to) {
-		res.status(400).send("Missing query params of 'from' and 'to'");
-		return;
-	}
 	if (room) {
-		res.json(room.text.slice(req.query.from, req.query.to));
+		res.json({text: room.text});
 	} else {
 		res.status(404).send("Room not found");
 	}
